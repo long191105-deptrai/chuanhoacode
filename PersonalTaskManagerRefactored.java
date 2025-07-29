@@ -11,32 +11,33 @@ import org.json.simple.parser.JSONParser; // Nhập JSONParser để phân tích
 import org.json.simple.parser.ParseException; // Nhập ParseException để xử lý lỗi trong quá trình phân tích JSON.
 import java.util.UUID; // Nhập UUID để tạo các định danh duy nhất toàn cầu.
 
-public class PersonalTaskManagerViolations {
+public class PersonalTaskManagerRefactored { // Định nghĩa lớp chính cho trình quản lý tác vụ cá nhân.
 
-    private static final String DB_FILE_PATH = "tasks_database.json";
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final String DB_FILE_PATH = "tasks_database.json"; // Định nghĩa hằng số cho đường dẫn tệp cơ sở dữ liệu.
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Định nghĩa bộ định dạng ngày hằng số.
 
-    // Phương thức trợ giúp để tải dữ liệu (sẽ được gọi lặp lại)
-    private static JSONArray loadTasksFromDb() {
-        JSONParser parser = new JSONParser();
-        try (FileReader reader = new FileReader(DB_FILE_PATH)) {
-            Object obj = parser.parse(reader);
-            if (obj instanceof JSONArray) {
-                return (JSONArray) obj;
-            }
-        } catch (IOException | ParseException e) {
-            System.err.println("Lỗi khi đọc file database: " + e.getMessage());
-        }
-        return new JSONArray();
+    // --- Commit 1: refactor: Tách các hàm kiểm tra đầu vào validate input (null, priority, ngày) ---
+
+    // Phương thức kiểm tra xem một chuỗi có rỗng hoặc null không (sau khi loại bỏ khoảng trắng).
+    private boolean isNullOrEmpty(String s) {
+        return s == null || s.trim().isEmpty(); // Trả về true nếu chuỗi là null hoặc rỗng/chỉ chứa khoảng trắng.
     }
 
-    // Phương thức trợ giúp để lưu dữ liệu
-    private static void saveTasksToDb(JSONArray tasksData) {
-        try (FileWriter file = new FileWriter(DB_FILE_PATH)) {
-            file.write(tasksData.toJSONString());
-            file.flush();
-        } catch (IOException e) {
-            System.err.println("Lỗi khi ghi vào file database: " + e.getMessage());
+    // Phương thức để xác thực xem chuỗi ưu tiên đã cho có phải là một trong các giá trị được phép không.
+    private boolean isValidPriority(String priority) {
+        String[] validPriorities = {"Thấp", "Trung bình", "Cao"}; // Định nghĩa một mảng các chuỗi ưu tiên hợp lệ.
+        for (String p : validPriorities) { // Lặp qua từng ưu tiên hợp lệ.
+            if (p.equals(priority)) return true; // Nếu ưu tiên đã cho khớp với một trong các ưu tiên hợp lệ, trả về true.
+        }
+        return false; // Nếu không tìm thấy sự trùng khớp, trả về false.
+    }
+
+    // Phương thức để phân tích một chuỗi ngày thành một đối tượng LocalDate.
+    private LocalDate parseDueDate(String dateStr) {
+        try { // Cố gắng phân tích chuỗi ngày.
+            return LocalDate.parse(dateStr, DATE_FORMATTER); // Phân tích chuỗi bằng cách sử dụng bộ định dạng đã định nghĩa.
+        } catch (DateTimeParseException e) { // Bắt một ngoại lệ nếu định dạng chuỗi ngày không hợp lệ.
+            return null; // Trả về null nếu quá trình phân tích thất bại.
         }
     }
 
