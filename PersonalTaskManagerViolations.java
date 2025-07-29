@@ -1,17 +1,15 @@
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import java.io.FileReader; // Nhập lớp FileReader để đọc các tệp ký tự.
+import java.io.FileWriter; // Nhập lớp FileWriter để ghi các tệp ký tự.
+import java.io.IOException; // Nhập lớp IOException để xử lý các lỗi I/O.
+import java.time.LocalDate; // Nhập lớp LocalDate để đại diện cho một ngày không có thời gian.
+import java.time.LocalDateTime; // Nhập lớp LocalDateTime để đại diện cho ngày và giờ.
+import java.time.format.DateTimeFormatter; // Nhập DateTimeFormatter để định dạng và phân tích ngày/giờ.
+import java.time.format.DateTimeParseException; // Nhập DateTimeParseException để xử lý lỗi trong quá trình phân tích ngày/giờ.
+import org.json.simple.JSONArray; // Nhập JSONArray để làm việc với các mảng JSON.
+import org.json.simple.JSONObject; // Nhập JSONObject để làm việc với các đối tượng JSON.
+import org.json.simple.parser.JSONParser; // Nhập JSONParser để phân tích các chuỗi JSON.
+import org.json.simple.parser.ParseException; // Nhập ParseException để xử lý lỗi trong quá trình phân tích JSON.
+import java.util.UUID; // Nhập UUID để tạo các định danh duy nhất toàn cầu.
 
 public class PersonalTaskManagerViolations {
 
